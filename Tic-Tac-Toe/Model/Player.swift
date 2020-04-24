@@ -9,9 +9,16 @@
 import Foundation
 
 struct Player {
+    var playerName: String
     var gamePieceType: GamePiece.PieceType
     
-    init(gamePiece: GamePiece.PieceType) {
+    init(playerName: String, gamePiece: GamePiece.PieceType) {
+        self.playerName = playerName
         self.gamePieceType = gamePiece
+    }
+    
+    mutating func copyPlayer(player: Player) {
+        self.playerName = player.playerName
+        self.gamePieceType = player.gamePieceType
     }
 }

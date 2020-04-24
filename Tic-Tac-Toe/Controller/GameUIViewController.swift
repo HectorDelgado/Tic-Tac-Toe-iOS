@@ -12,16 +12,11 @@ class GameUIViewController: UIViewController {
 
     @IBOutlet weak var gameboardCollectionView: UICollectionView!
     
-    //var currentPlayer: Set<String> = ["circle]
-    
-    private let player1 = Player(gamePiece: GamePiece.PieceType.circlelocation)
-    private let player2 = Player(gamePiece: GamePiece.PieceType.crosslocation)
-    private var currentPlayer = Player(gamePiece: GamePiece.PieceType.emptylocation)
+    private let player1 = Player(playerName: "Player 1", gamePiece: GamePiece.PieceType.circlelocation)
+    private let player2 = Player(playerName: "Player 2", gamePiece: GamePiece.PieceType.crosslocation)
+    private var currentPlayer = Player(playerName: "", gamePiece: GamePiece.PieceType.emptylocation)
     private var player1Turn = false
-    
-    let gameboardData = ["circlelocation", "circlelocation", "circlelocation",
-                         "circlelocation", "circlelocation", "circlelocation",
-                         "circlelocation", "circlelocation", "circlelocation"]
+    private var gameIsActive = true
     
     var data = [GamePiece(bgImage: "emptylocation"), GamePiece(bgImage: "emptylocation"), GamePiece(bgImage: "emptylocation"),
                 GamePiece(bgImage: "emptylocation"), GamePiece(bgImage: "emptylocation"), GamePiece(bgImage: "emptylocation"),
@@ -39,11 +34,59 @@ class GameUIViewController: UIViewController {
         switchPlayers()
     }
     
-    func placeGamePiece(indexLocation: Int) {
-        data[indexLocation].locationType = currentPlayer.gamePieceType
+    func initializeGame() {
         
-        // check if game is active
-        // check if location is available
+    }
+    
+    func placeGamePiece(indexLocation: Int) {
+        if (gameIsActive) {
+            if (locationIsAvailable(atIndex: indexLocation)) {
+                data[indexLocation].locationType = currentPlayer.gamePieceType
+            }
+            
+            checkGameStatus()
+        } else {
+            print("Game not active. Time to reset")
+        }
+        
+    }
+    
+    /**
+     Checks if a location is available on the gameboard.
+     - Parameter atIndex: The index that is being checked.
+     
+     - Returns: True if the location is "empty". False otherwise.
+     */
+    func locationIsAvailable(atIndex: Int) -> Bool {
+        if (data[atIndex].locationType == GamePiece.PieceType.emptylocation) {
+            print("Setting gamepiece at \(atIndex)")
+            return true
+        } else {
+            print("Location is unavailable")
+            return false
+        }
+    }
+    
+    func checkGameStatus() {
+        // Player has won horizontally
+        let playerWonHorizontally =
+            (data[0].locationType == currentPlayer.gamePieceType && data[1].locationType == currentPlayer.gamePieceType && data[2].locationType == currentPlayer.gamePieceType) ||
+                (data[3].locationType == currentPlayer.gamePieceType && data[4].locationType == currentPlayer.gamePieceType && data[5].locationType == currentPlayer.gamePieceType) ||
+                (data[6].locationType == currentPlayer.gamePieceType && data[7].locationType == currentPlayer.gamePieceType && data[8].locationType == currentPlayer.gamePieceType)
+        
+        let playerWonVertically =
+            (data[0].locationType == currentPlayer.gamePieceType && data[3].locationType == currentPlayer.gamePieceType && data[6].locationType == currentPlayer.gamePieceType) ||
+                (data[1].locationType == currentPlayer.gamePieceType && data[4].locationType == currentPlayer.gamePieceType && data[7].locationType == currentPlayer.gamePieceType) ||
+                (data[2].locationType == currentPlayer.gamePieceType && data[5].locationType == currentPlayer.gamePieceType && data[8].locationType == currentPlayer.gamePieceType)
+        
+        let playerWonDiagonally =
+            (data[0].locationType == currentPlayer.gamePieceType && data[4].locationType == currentPlayer.gamePieceType && data[8].locationType == currentPlayer.gamePieceType) ||
+                (data[2].locationType == currentPlayer.gamePieceType && data[4].locationType == currentPlayer.gamePieceType && data[6].locationType == currentPlayer.gamePieceType)
+        
+        if (playerWonHorizontally || playerWonVertically || playerWonDiagonally) {
+            gameIsActive = false
+            print("Game Over! \(currentPlayer.playerName) has won!")
+        }
     }
     
     func switchPlayers() {
@@ -54,7 +97,7 @@ class GameUIViewController: UIViewController {
 
 extension GameUIViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return gameboardData.count
+        return data.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
