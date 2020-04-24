@@ -34,7 +34,7 @@
             </objects>
             <point key="canvasLocation" x="1044.9275362318842" y="137.77173913043478"/>
         </scene>
-        <!--GameUI View Controller-->
+        <!--Start-->
         <scene sceneID="4o2-HS-HaA">
             <objects>
                 <viewController id="CXW-eE-uJ5" customClass="GameUIViewController" customModule="Tic_Tac_Toe" customModuleProvider="target" sceneMemberID="viewController">
@@ -87,7 +87,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="xvD-6m-yX8"/>
                     </view>
-                    <navigationItem key="navigationItem" id="XOZ-JA-F5u"/>
+                    <navigationItem key="navigationItem" title="Start" id="XOZ-JA-F5u"/>
                     <connections>
                         <outlet property="gameboardCollectionView" destination="C8P-5U-cJt" id="IvW-If-tnM"/>
                     </connections>

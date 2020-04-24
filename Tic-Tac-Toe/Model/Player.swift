@@ -10,9 +10,9 @@ import Foundation
 
 struct Player {
     var playerName: String
-    var gamePieceType: GamePiece.PieceType
+    var gamePieceType: GamePiece
     
-    init(playerName: String, gamePiece: GamePiece.PieceType) {
+    init(playerName: String, gamePiece: GamePiece) {
         self.playerName = playerName
         self.gamePieceType = gamePiece
     }
