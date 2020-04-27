@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Player {
+class Player : Equatable {
     var playerName: String
     var gamePieceType: GamePiece
     
@@ -17,8 +17,12 @@ struct Player {
         self.gamePieceType = gamePiece
     }
     
-    mutating func copyPlayer(player: Player) {
+    func copyPlayer(player: Player) {
         self.playerName = player.playerName
         self.gamePieceType = player.gamePieceType
+    }
+    
+    static func == (lhs: Player, rhs: Player) -> Bool {
+        return lhs.gamePieceType.locationType == rhs.gamePieceType.locationType
     }
 }

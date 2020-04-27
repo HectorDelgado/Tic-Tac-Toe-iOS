@@ -21,13 +21,13 @@
 
 /* Begin PBXFileReference section */
 		2200138C2436AF9C00E62639 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		2203909D2453901B00B03B34 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2203909E2453901B00B03B34 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		22E1C46E243536D0009301FE /* Tic-Tac-Toe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tic-Tac-Toe.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		22E1C471243536D0009301FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		22E1C473243536D0009301FE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		22E1C475243536D0009301FE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		22E1C478243536D0009301FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		22E1C47A243536D0009301FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		22E1C47D243536D0009301FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		22E1C47F243536D0009301FE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22E1C48E24353E58009301FE /* GameboardCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameboardCollectionViewCell.swift; sourceTree = "<group>"; };
 		22E1C490243540DB009301FE /* GameUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameUIViewController.swift; sourceTree = "<group>"; };
@@ -190,7 +190,7 @@
 		22E1C477243536D0009301FE /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				22E1C478243536D0009301FE /* Base */,
+				2203909D2453901B00B03B34 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -198,7 +198,7 @@
 		22E1C47C243536D0009301FE /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				22E1C47D243536D0009301FE /* Base */,
+				2203909E2453901B00B03B34 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";

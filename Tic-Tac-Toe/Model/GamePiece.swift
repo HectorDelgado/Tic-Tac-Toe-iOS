@@ -9,7 +9,8 @@
 import Foundation
 import UIKit
 
-struct GamePiece {
+class GamePiece : Equatable{
+    
     enum PieceType {
         case emptylocation
         case circlelocation
@@ -39,7 +40,7 @@ struct GamePiece {
         }
     }
     
-    private mutating func setBackgroundImg() {
+    private func setBackgroundImg() {
         switch locationType {
         case PieceType.circlelocation:
             self.backgroundImg = UIImage(named: "circlelocation") ?? #imageLiteral(resourceName: "emptylocation")
@@ -48,5 +49,9 @@ struct GamePiece {
         default:
             self.backgroundImg = UIImage(named: "emptylocation") ?? #imageLiteral(resourceName: "emptylocation")
         }
+    }
+    
+    static func == (lhs: GamePiece, rhs: GamePiece) -> Bool {
+        return lhs.locationType == rhs.locationType
     }
 }

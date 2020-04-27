@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GameUIViewController: UIViewController, UITextFieldDelegate {
+class GameUIViewController: UIViewController {
 
     @IBOutlet weak var gameboardCollectionView: UICollectionView!
     
@@ -17,56 +17,64 @@ class GameUIViewController: UIViewController, UITextFieldDelegate {
     private var currentPlayer = Player(playerName: "", gamePiece: GamePiece(boardPieceType: GamePiece.PieceType.emptylocation))
     private var player1Turn = (Int.random(in: 0...100) > 50 ? true : false)
     private var gameIsActive = true
-    
-    var data: [GamePiece] = []
-    
-//    let estimateWidth = 160.0
-//    let cellMarginSize = 16.0
+    private var player1Score = 0
+    private var player2Score = 0
+    private var data: [GamePiece] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         gameboardCollectionView.delegate = self
         gameboardCollectionView.dataSource = self
-        createPlayer1()
+        
+        initializeSettings()
+        createPlayers()
     }
     
-    func createPlayer1() {
-        let alert = UIAlertController(title: "Name for Player 1?", message: nil, preferredStyle: .alert)
-        alert.addTextField { playerName in
-            playerName.placeholder = "Enter your name"
-        }
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-            let playerName = alert.textFields?.first?.text ?? "Player 1"
-            self.player1 = Player(playerName: playerName, gamePiece: GamePiece(boardPieceType: GamePiece.PieceType.circlelocation))
-            self.createPlayer2()
-        
-        }))
-        
-        self.present(alert, animated: true)
+    private func initializeSettings() {
+        let myAttributes = [NSAttributedString.Key.font: UIFont(name: "Avenir-Book", size: 18.0)]
+        self.navigationController?.navigationBar.titleTextAttributes = myAttributes as [NSAttributedString.Key : Any]
     }
     
-    func createPlayer2() {
-        let alert = UIAlertController(title: "Name for Player 2?", message: nil, preferredStyle: .alert)
-        alert.addTextField { playerName in
-            playerName.placeholder = "Enter your name"
-        }
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-            let playerName = alert.textFields?.first?.text ?? "Player 1"
-            self.player2 = Player(playerName: playerName, gamePiece: GamePiece(boardPieceType: GamePiece.PieceType.crosslocation))
+    /**
+     
+     */
+    private func createPlayers() {
+        let alert = UIAlertController(title: "Name for Players?", message: nil, preferredStyle: .alert)
+        let acceptAction = UIAlertAction(title: "OK", style: .default, handler: { action in
+            
+            // Initialize player 1
+            if let name = alert.textFields?[0].text {
+                if (name.count > 0) {
+                    self.player1 = Player(playerName: name, gamePiece: GamePiece(boardPieceType: GamePiece.PieceType.circlelocation))
+                } else {
+                    self.player1 = Player(playerName: "Player 1", gamePiece: GamePiece(boardPieceType: GamePiece.PieceType.circlelocation))
+                }
+            }
+            
+            // Initialize player 2
+            if let name = alert.textFields?[1].text {
+                if (name.count > 0) {
+                    self.player2 = Player(playerName: name, gamePiece: GamePiece(boardPieceType: GamePiece.PieceType.crosslocation))
+                } else {
+                    self.player2 = Player(playerName: "Player 2", gamePiece: GamePiece(boardPieceType: GamePiece.PieceType.crosslocation))
+                }
+            }
             
             self.initializeGame()
             self.gameboardCollectionView.reloadData()
-        }))
+        })
         
+        // Create TextFields for player 1 & 2 names
+        alert.addTextField { playerName in
+            playerName.placeholder = "Player 1 name"
+        }
+        alert.addTextField { playerName in
+            playerName.placeholder = "Player 2 name"
+        }
         
+        alert.addAction(acceptAction)
         self.present(alert, animated: true)
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        print("return pressed")
-        textField.resignFirstResponder()
-        return true
     }
     
     /**
@@ -79,19 +87,23 @@ class GameUIViewController: UIViewController, UITextFieldDelegate {
         switchPlayers()
     }
     
-    func placeGamePiece(indexLocation: Int) {
+    /**
+     Attempts to place a game piece at a specified index if its available.
+     Resets the game if it's not active.
+     - Parameter indexLocation: The index to place a GamePiece at.
+     */
+    func placeGamePiece(indexLocation: Int, gamePiece: GamePiece) {
         if (gameIsActive) {
             if (locationIsAvailable(atIndex: indexLocation)) {
-                data[indexLocation].locationType = currentPlayer.gamePieceType.locationType
+                data[indexLocation].locationType = gamePiece.locationType
                 checkGameStatus()
             } else {
                 print("Location is unavailable")
             }
             
         } else {
-            print("Game not active. Time to reset")
-            initializeGame()
-            gameIsActive = true
+            self.initializeGame()
+            self.gameIsActive = true
         }
     }
     
@@ -103,7 +115,6 @@ class GameUIViewController: UIViewController, UITextFieldDelegate {
      */
     func locationIsAvailable(atIndex: Int) -> Bool {
         if (data[atIndex].locationType == GamePiece.PieceType.emptylocation) {
-            print("Setting gamepiece at \(atIndex)")
             return true
         } else {
             return false
@@ -140,11 +151,13 @@ class GameUIViewController: UIViewController, UITextFieldDelegate {
         
         if (playerWonHorizontally || playerWonVertically || playerWonDiagonally) {
             gameIsActive = false
-            self.navigationItem.title = "Click to reset"
-            print("Game Over! \(currentPlayer.playerName) has won!")
+            self.navigationItem.title = "Game Over"
+            self.present(simpleAlert(alertTitle: "\(currentPlayer.playerName) has won",alertMessage: "Click the board to reset",actionTitle: "OK",handler: nil),animated: true)
+            
         } else if (gameIsDraw) {
-            self.navigationItem.title = "Click to reset"
-            print("Game is a bust. Draw.")
+            gameIsActive = false
+            self.navigationItem.title = "Game Over"
+            self.present(simpleAlert(alertTitle: "Game is a bust. Draw",alertMessage: "Click the board to reset",actionTitle: "OK",handler: nil),animated: true)
         } else {
             switchPlayers()
         }
@@ -153,7 +166,21 @@ class GameUIViewController: UIViewController, UITextFieldDelegate {
     func switchPlayers() {
         currentPlayer.copyPlayer(player: player1Turn ? player1 : player2)
         player1Turn = !player1Turn
+        
         self.navigationItem.title = "\(currentPlayer.playerName)'s Turn (\(currentPlayer.gamePieceType.getPieceTypeAsString()))"
+    }
+    
+    /**
+     Instantiates and returns a UIAlertController that displays a simple action.
+     */
+    private func simpleAlert(alertTitle: String?, alertMessage: String?, actionTitle: String?, handler: (() -> Void)?) -> UIAlertController {
+        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
+        
+        let simpleAction = UIAlertAction(title: actionTitle, style: .default) { action in
+            handler
+        }
+        alert.addAction(simpleAction)
+        return alert
     }
 }
 
@@ -169,7 +196,7 @@ extension GameUIViewController: UICollectionViewDataSource, UICollectionViewDele
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        placeGamePiece(indexLocation: indexPath.row)
+        placeGamePiece(indexLocation: indexPath.row, gamePiece: currentPlayer.gamePieceType)
         gameboardCollectionView.reloadData()
     }
 }
